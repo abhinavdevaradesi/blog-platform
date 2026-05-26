@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog4U | Stories & Ideas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #fafafa; color: #292929; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+        .blog-brand { font-weight: 800; font-size: 1.8rem; color: #000; text-decoration: none; }
+        .post-card { border: none; border-bottom: 1px solid #eaeaea; background: transparent; border-radius: 0; padding: 2rem 0; }
+        .post-title { font-weight: 700; color: #1a1a1a; text-decoration: none; font-size: 1.5rem; }
+        .post-title:hover { color: #292929; }
+        .author-link { color: #1a1a1a; text-decoration: underline; font-weight: 500; }
+        .sidebar-panel { background-color: #fff; border: 1px solid #e6e6e6; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-light bg-white border-bottom py-3 mb-5">
+    <div class="container">
+        <a th:href="@{/}" class="blog-brand">Blog4U.</a>
+        <span class="text-muted small fw-bold">Abhinav Devaradesi</span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 pe-lg-5">
+            <h1 class="h5 text-muted border-bottom pb-2 mb-4">Trending Stories</h1>
+
+            <div th:if="${#lists.isEmpty(posts)}" class="py-5 text-center text-muted">
+                No articles published yet. Use the admin panels to launch content.
+            </div>
+
+            <div th:each="post : ${posts}" class="card post-card">
+                <div class="card-body p-0">
+                    <a th:href="@{/post/{id}(id=${post.id})}" class="post-title d-block mb-2" th:text="${post.title}">Post Title</a>
+                    <p class="text-secondary mb-3" th:text="${#strings.abbreviate(post.content, 160)}">Snippet text...</p>
+
+                    <div class="d-flex align-items-center justify-content-between text-muted small">
+                        <div>
+                            Written by:
+                            <a th:href="@{/author/{id}(id=${post.author.id})}" class="author-link" th:text="${post.author.fullName}">Author</a>
+                        </div>
+                        <div>
+                            <a th:href="@{/web/posts/edit/{id}(id=${post.id})}" class="btn btn-link btn-sm text-decoration-none text-primary me-2 p-0">Edit</a>
+                            <a th:href="@{/web/posts/delete/{id}(id=${post.id})}" class="btn btn-link btn-sm text-decoration-none text-danger p-0" onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
+                        </div>
+                        <span th:text="'Article #' + ${post.id}">#1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-5 mt-lg-0">
+            <div class="sidebar-panel p-4 mb-4">
+                <h4 class="h6 fw-bold text-dark mb-3">Admin: Add Author</h4>
+                <form th:action="@{/web/users}" th:object="${newUser}" method="POST">
+                    <div class="mb-2"><input type="text" th:field="*{fullName}" class="form-control form-control-sm" placeholder="Full Name" required></div>
+                    <div class="mb-2"><input type="text" th:field="*{username}" class="form-control form-control-sm" placeholder="Username" required></div>
+                    <div class="mb-2"><input type="email" th:field="*{email}" class="form-control form-control-sm" placeholder="Email Address" required></div>
+                    <button type="submit" class="btn btn-dark btn-sm w-100">Register</button>
+                </form>
+            </div>
+
+            <div class="sidebar-panel p-4">
+                <h4 class="h6 fw-bold text-dark mb-3">Admin: Write Post</h4>
+                <form th:action="@{/web/posts}" th:object="${newPost}" method="POST">
+                    <div class="mb-2">
+                        <select name="userId" class="form-select form-select-sm" required>
+                            <option value="" disabled selected>Select Author...</option>
+                            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.fullName}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><input type="text" th:field="*{title}" class="form-control form-control-sm" placeholder="Title" required></div>
+                    <div class="mb-3"><textarea th:field="*{content}" class="form-control form-control-sm" rows="3" placeholder="Content..." required></textarea></div>
+                    <button type="submit" class="btn btn-success btn-sm w-100">Publish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
