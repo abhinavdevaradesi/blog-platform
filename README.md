@@ -1,83 +1,74 @@
-# 🚀 Blog4U Live: Enterprise Relational Blogging Platform
+# Blog Platform — Full-Stack CRUD App with Spring Boot, JPA & Thymeleaf
 
-A high-performance, full-stack MVC blogging application engineered using **Java 21**, **Spring Boot 4.x**, and **PostgreSQL**.
+A full-stack MVC blogging application built using **Java 21**, **Spring Boot 4.x**, and **PostgreSQL**.
 
 This platform provides a complete content management lifecycle featuring:
 
-- Layered architectural isolation
-- Strict data validation
-- Automated relational schema tracking
-- Dynamic server-side rendering powered by Thymeleaf
+- Layered architecture (Controller → Service → Repository)
+- Data validation
+- Automated relational schema management via Hibernate
+- Server-side rendering with Thymeleaf
 
 ---
 
-# System Architecture & Framework Matrix
-
-The system maps clean visual template pipelines seamlessly into a decoupled transactional database tier using the following enterprise stack:
+# Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Back-End Engine | Spring Boot 4.0.6 & Java 21 (JDK 21) |
-| Data Access Tier | Spring Data JPA & Hibernate ORM 7.2 |
-| Relational Database | PostgreSQL 18.3 with HikariCP |
-| Front-End Render Engine | Thymeleaf + Bootstrap 5.3 CDN |
-| Development Tooling | IntelliJ IDEA 2026.1 & Postman |
+| Back-End | Spring Boot 4.0.6 & Java 21 (JDK 21) |
+| Data Access | Spring Data JPA & Hibernate ORM 7.2 |
+| Database | PostgreSQL 18.3 with HikariCP |
+| Front-End | Thymeleaf + Bootstrap 5.3 CDN |
+| Tooling | IntelliJ IDEA & Postman |
 
 ---
 
-# Core Platform Capabilities
+# Core Features
 
-## 1. Layered Decoupled Routing
+## 1. Layered Routing
 
-Implements enterprise-grade separation between:
+Clean separation between:
 
 - REST APIs using `@RestController`
 - Server-rendered view pipelines using `@Controller`
 
 ---
 
-## 2. Managed Relational Mapping
-
-Leverages strong database entity relationships where:
+## 2. Relational Mapping
 
 - One `User` maps to many `Post` records
-- Cascade lifecycle operations are enabled using `CascadeType.ALL`
-- Serialization recursion prevention is handled via `@JsonIgnore`
+- Cascade lifecycle operations enabled using `CascadeType.ALL`
+- Serialization recursion prevention handled via `@JsonIgnore`
 
 ---
 
-## 3. Robust Transaction Isolation
+## 3. Transaction Management
 
 Database operations are wrapped inside transactional service layers to ensure:
 
-- Safe rollback protection
+- Safe rollback on failure
 - Atomic database consistency
 - Isolation between concurrent operations
 
 ---
 
-## 4. Full CRUD Interactivity
+## 4. Full CRUD Functionality
 
 Supports live browser-driven functionality including:
 
 - Registering authors
 - Publishing blog posts
-- Editing records
-- Updating entities
-- Cascade deleting linked articles
+- Editing and updating records
+- Cascade deleting linked posts
 
 ---
 
-# 🛠️ Step-by-Step Local Deployment Guide
-
-Follow the steps below to deploy the platform locally.
-
----
+# Local Setup Guide
 
 ## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/blog-platform.git
+git clone https://github.com/abhinavdevaradesi/blog-platform.git
 cd blog-platform
 ```
 
@@ -104,16 +95,16 @@ src/main/resources/application.properties
 Paste the following configuration:
 
 ```properties
-# Network Endpoint Assignment
+# Server Port
 server.port=8081
 
-# PostgreSQL Data Source Sync Configuration
+# PostgreSQL Configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/blogdb?createDatabaseIfNotExist=true
 spring.datasource.username=postgres
 spring.datasource.password=YOUR_POSTGRES_PASSWORD_HERE
 spring.datasource.driver-class-name=org.postgresql.Driver
 
-# Hibernate Engine Behavioral Tunings
+# Hibernate Configuration
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.open-in-view=false
@@ -123,8 +114,6 @@ spring.jpa.open-in-view=false
 
 ## 4. Build & Run the Application
 
-Execute the Maven lifecycle commands:
-
 ```bash
 mvn clean install
 mvn spring-boot:run
@@ -132,13 +121,7 @@ mvn spring-boot:run
 
 ### IntelliJ IDEA Alternative
 
-Run the application directly by launching:
-
-```text
-BlogPlatformApplication.java
-```
-
-using the green Run button.
+Run the application directly by launching `BlogPlatformApplication.java` using the green Run button.
 
 ---
 
@@ -152,30 +135,33 @@ http://localhost:8081/
 
 ---
 
-# API Endpoint Evaluation Documentation
+# API Endpoints
 
-You can test all API endpoints using Postman.
+All endpoints can be tested using Postman.
 
 ---
 
 ## Register New User
 
-### Endpoint
+**Endpoint:** `POST /api/users`
 
-```http
-POST /api/users
-```
+**URL:** `http://localhost:8081/api/users`
 
-### URL
-
-```text
-http://localhost:8081/api/users
-```
-
-### Sample JSON
+**Sample Request:**
 
 ```json
 {
+  "fullName": "John Doe",
+  "username": "johndoe",
+  "email": "john@example.com"
+}
+```
+
+**Sample Response:**
+
+```json
+{
+  "id": 1,
   "fullName": "John Doe",
   "username": "johndoe",
   "email": "john@example.com"
@@ -186,38 +172,45 @@ http://localhost:8081/api/users
 
 ## Fetch All Users
 
-### Endpoint
+**Endpoint:** `GET /api/users`
 
-```http
-GET /api/users
-```
+**URL:** `http://localhost:8081/api/users`
 
-### URL
+**Sample Response:**
 
-```text
-http://localhost:8081/api/users
+```json
+[
+  {
+    "id": 1,
+    "fullName": "John Doe",
+    "username": "johndoe",
+    "email": "john@example.com"
+  }
+]
 ```
 
 ---
 
 ## Create Post for User
 
-### Endpoint
+**Endpoint:** `POST /api/posts/user/{id}`
 
-```http
-POST /api/posts/user/{id}
-```
+**Example:** `http://localhost:8081/api/posts/user/1`
 
-### Example
-
-```text
-http://localhost:8081/api/posts/user/1
-```
-
-### Sample JSON
+**Sample Request:**
 
 ```json
 {
+  "title": "My First Blog",
+  "content": "Spring Boot relational systems are powerful."
+}
+```
+
+**Sample Response:**
+
+```json
+{
+  "id": 1,
   "title": "My First Blog",
   "content": "Spring Boot relational systems are powerful."
 }
@@ -227,122 +220,99 @@ http://localhost:8081/api/posts/user/1
 
 ## Fetch All Posts
 
-### Endpoint
+**Endpoint:** `GET /api/posts`
 
-```http
-GET /api/posts
-```
+**URL:** `http://localhost:8081/api/posts`
 
-### URL
+**Sample Response:**
 
-```text
-http://localhost:8081/api/posts
+```json
+[
+  {
+    "id": 1,
+    "title": "My First Blog",
+    "content": "Spring Boot relational systems are powerful."
+  }
+]
 ```
 
 ---
 
-# 🛠️ Critical Technical Root Cause Assessments & Bug Remediation
+# Web (Thymeleaf) Routes
 
-During development, multiple real-world enterprise engineering failures were encountered and resolved.
+| Route | Description |
+|---|---|
+| `GET /` | Home page — lists all blog posts |
+| `GET /users/register` | User registration form |
+| `GET /posts/new` | Create new post form |
+| `GET /posts/edit/{id}` | Edit existing post |
+
+*(Update these to match your actual `@Controller` routes)*
 
 ---
 
-# Incident 1: Tomcat Bind Failure (Port 8080 Conflict)
+# Challenges & Solutions
 
-## Root Cause Analysis
+During development, several real issues came up and were debugged and resolved.
 
-A background process or another application already occupied port `8080`, preventing Tomcat from starting.
+---
 
-## Remediation Strategy
+## Issue 1: Tomcat Port Conflict (8080 already in use)
 
-Shifted the server runtime to:
+**Cause:** Another process was already running on port `8080`, preventing Tomcat from starting.
+
+**Fix:** Changed the server port:
 
 ```properties
 server.port=8081
 ```
 
-This bypassed the socket collision and restored successful application startup.
+---
+
+## Issue 2: Infinite JSON Serialization Recursion (`StackOverflowError`)
+
+**Cause:** Bidirectional `@OneToMany` / `@ManyToOne` mappings caused Jackson to recursively serialize related entities indefinitely.
+
+**Fix:** Added `@JsonIgnore` on the back-reference field to break the recursive loop while preserving the ORM relationship.
 
 ---
 
-# Incident 2: Infinite JSON Serialization Recursion (`StackOverflowError`)
+## Issue 3: PostgreSQL Constraint Violation (`DataIntegrityViolationException`)
 
-## Root Cause Analysis
+**Cause:** The database enforced a non-null constraint on `fullName`, but some API requests omitted this field.
 
-Bidirectional entity mappings using:
-
-- `@OneToMany`
-- `@ManyToOne`
-
-caused Jackson serialization to recursively loop between entities indefinitely.
-
-## Remediation Strategy
-
-Implemented:
-
-```java
-@JsonIgnore
-```
-
-on relational reference fields to prevent cyclic serialization while preserving ORM linkage integrity.
+**Fix:** Updated front-end forms, API request payloads, and validation logic to ensure required fields are always sent.
 
 ---
 
-# Incident 3: PostgreSQL Constraint Violation (`DataIntegrityViolationException`)
+# Skills Demonstrated
 
-## Root Cause Analysis
-
-The database enforced non-null constraints on the `fullName` field, but incoming API payloads omitted the required property.
-
-## Remediation Strategy
-
-Updated:
-
-- Front-end forms
-- API request payloads
-- Validation structures
-
-to guarantee mandatory fields were always transmitted correctly.
-
----
-
-# Enterprise Engineering Highlights
-
-This project demonstrates practical experience with:
-
-- Enterprise MVC architecture
-- Relational database engineering
-- Hibernate ORM lifecycle management
+- MVC architecture with Spring Boot
+- Relational database design (PostgreSQL + Hibernate)
 - RESTful API development
 - Transaction management
-- JSON serialization control
-- PostgreSQL schema enforcement
-- Full-stack Spring Boot development
+- JSON serialization handling
 - Thymeleaf server-side rendering
-- Production debugging & root-cause analysis
+- Debugging and root-cause analysis
 
 ---
 
 # Future Enhancements
 
-Potential future upgrades include:
-
 - Spring Security + JWT Authentication
 - Role-Based Access Control (RBAC)
-- Dockerized Deployment
-- CI/CD Integration
-- Cloud Hosting (AWS/GCP/Azure)
-- Redis Caching Layer
-- Elasticsearch Integration
-- Real-Time Notifications via WebSocket
-- Markdown Blog Editor
-- Image Upload Support
+- Docker support
+- CI/CD pipeline
+- Cloud deployment (AWS/GCP/Azure)
+- Redis caching layer
+- Real-time notifications via WebSocket
+- Markdown blog editor
+- Image upload support
 
 ---
 
-# 👨‍💻 Author
+# Author
+
 Abhinav Devaradesi
 
-Developed as an enterprise-grade relational blogging platform portfolio project using modern Java ecosystem technologies.
-
----
+Built as a full-stack portfolio project to practice Spring Boot, JPA/Hibernate, and Thymeleaf.
